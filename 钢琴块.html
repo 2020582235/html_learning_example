@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>钢琴块游戏</title>
+		<script>
+			console.log("这里是钢琴块游戏");
+			random = function(range){ //生成随机整数
+				let fraction = Math.random(); //0~1的随机小数
+				let fraction2 = fraction * range; //0~range的随机小数
+			    return Math.floor(fraction2); //向下取整
+			}
+			window.onload = function(){ //页面加载完成后执行
+				let gameOver = false; //游戏是否结束
+				let y = [0, -25, -50, -75, -100]; //记录5个黑块的纵坐标
+				let x = []; //记录5个黑块的横坐标
+				x[0] = random(4); //第1个黑块随机出现在一列中
+				for(let i = 1; i < 5; i += 1){ //遍历后面4个黑块
+					let moveX = random(3) + 1; //上下相邻黑块在水平方向的偏移量
+					x[i] = (x[i - 1] + moveX) % 4; //黑块的横坐标
+				} //上方新出现的黑块不能和下方相邻的黑块在同一列
+				let speed = 1; //黑块下移的速度
+				//tile是一个数组，数组中的元素链接界面中的黑块
+				let tile = document.getElementsByClassName("block");
+				document.onkeydown = function(e){ //点击键盘时执行这个函数
+					let lowestId; //最低的黑块的序号
+					for(let i = 0, lowestY = 0; i < 5; i += 1){ //遍历5个黑块的纵坐标
+						if(y[i] > lowestY){                     //找出最低的黑块的序号
+							if(tile[i].style.backgroundColor != "rgba(0, 0, 0, 0.1)"){
+								lowestId = i;                   //如果是没被点击过的黑块
+								lowestY = y[i];
+							}
+						}
+					}
+					let lowestBlock = tile[lowestId]; //最低的黑块
+					let requestX = x[lowestId]; //需要点击的黑块位置
+					let realX; //实际点击的位置，从左到右依次为0,1,2,3
+					if(e.key == "r"){ //如果键盘按了R
+						realX = 0;
+					}else if(e.key == "t"){
+						realX = 1;
+					}else if(e.key == "y"){
+						realX = 2;
+					}else if(e.key == "u"){
+						realX = 3;
+					}else{ //如果按了其他按键
+						return; //onkeydown函数提前结束，跳过后面是否点对的判断
+					}
+					if(realX == requestX){ //如果点对了，黑块变成半透明
+						lowestBlock.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+					}else{ //如果点错了
+						alert("点错啦！游戏结束"); //弹出对话框，会暂停后面语句执行
+						gameOver = true; //标记游戏结束，界面不再改变
+						window.location.reload(); //弹完对话框就刷新页面
+					}
+				}
+				let draw = function(){ //定义draw函数
+					for(let i = 0; i < 5; i += 1){
+						y[i] += speed; //纵坐标增大，黑块下移
+						speed += 0.0001; //游戏加速
+						if(y[i] >= 100){ //如果黑块上边缘移出画面下边界
+							if(tile[i].style.backgroundColor == "rgba(0, 0, 0, 0.1)"){
+								y[i] -= 125; //把黑块下边缘移到画面上边界
+								x[i] = (x[(i + 4) % 5] + random(3) + 1) % 4;
+								//重新生成
+								tile[i].style.backgroundColor = "rgb(0, 0, 0)";
+							}else{
+								alert("漏点啦！游戏结束"); //弹出对话框
+								gameOver = true; //标记游戏结束，界面不再改变
+								window.location.reload(); //弹完对话框就刷新页面
+							}
+						}
+						tile[i].style.top = y[i] + "%"; //数据更新了，还要更新视图
+						tile[i].style.left = (x[i] * 25) + "%";
+					}
+					if(gameOver == false){ //如果游戏没结束，将绘制下一帧画面
+						requestAnimationFrame(draw);
+						//该语句不会阻挡后面语句的执行，等到绘制下一帧时再次执行draw函数
+					}
+				}
+				draw(); //执行draw函数
+			}
+		</script>
+		<style>
+			body {
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				display: flex;
+			}
+			#window {
+				width: 480px;
+				margin: 0 auto;
+				position: relative;
+				background-image: linear-gradient(rgb(104, 163, 255), rgb(163, 204, 255));
+			}
+			.block {
+				position: absolute;
+				width: 25%;
+				height: 25%;
+				background-color: rgb(0, 0, 0);
+			}
+			.line {
+				position: absolute;
+				width: 0;
+				height: 100%;
+				box-shadow: 0 0 1px 1px rgb(255, 255, 255);
+			}
+			#line1 {
+				left: 25%;
+			}
+			#line2 {
+				left: 50%;
+			}
+			#line3 {
+				left: 75%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="window">
+			<div class="block"></div>
+			<div class="block"></div>
+			<div class="block"></div>
+			<div class="block"></div>
+			<div class="block"></div>
+			<div class="line" id="line1"></div>
+			<div class="line" id="line2"></div>
+			<div class="line" id="line3"></div>
+		</div>
+	</body>
+</html>

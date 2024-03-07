@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>变色彩灯</title>
+		<script>
+			console.log("这里是变色彩灯");
+			window.onload = function(){ //页面加载完成后执行
+				let r = 255, g = 255, b = 255;
+				let light = document.getElementById("light"); //大彩灯
+				let lightR = document.getElementById("小红灯"); //小红灯
+				let lightG = document.getElementById("小绿灯"); //小绿灯
+				let lightB = document.getElementById("小蓝灯"); //小蓝灯
+				document.onkeydown = function(e){ //点击键盘时执行这个函数
+					if(e.key == "r"){ //如果键盘按了R
+						r = 255 - r; //红色开/关
+					}else if(e.key == "g"){ //如果键盘按了G
+						g = 255 - g; //绿色开/关
+					}else if(e.key == "b"){ //如果键盘按了B
+						b = 255 - b; //蓝色开/关
+					} //数据更新之后，还要更新视图
+					light.style.backgroundColor = "rgb(" + r + ", " + g + ", " + b + ")";
+					light.style.boxShadow = "0 0 20px 0 rgb(" + r + ", " + g + ", " + b + ")";
+					lightR.style.backgroundColor = "rgb(" + r + ", 0, 0)"; //小红灯颜色
+					lightG.style.backgroundColor = "rgb(0, " + g + ", 0)"; //小绿灯颜色
+					lightB.style.backgroundColor = "rgb(0, 0, " + b + ")"; //小蓝灯颜色
+				}
+			}
+		</script>
+		<style>
+			body {
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				display: flex;
+				background-color: rgb(0, 0, 0);
+			}
+			#lights {
+				margin: auto;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			#light {
+				width: 150px;
+				height: 150px;
+				border-radius: 50%;
+				margin: 10px;
+				background-color: rgb(255, 255, 255);
+				box-shadow: 0 0 20px 0 rgb(255, 255, 255);
+			}
+			.light-small {
+				width: 16px;
+				height: 16px;
+				margin: 2px;
+				border-radius: 50%;
+				display: inline-block;
+			}
+			#小红灯 {
+				background-color: rgb(255, 0, 0);
+			}
+			#小绿灯 {
+				background-color: rgb(0, 255, 0);
+			}
+			#小蓝灯 {
+				background-color: rgb(0, 0, 255);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="lights">
+			<div id="light"></div>
+			<div>
+				<div class="light-small" id="小红灯"></div>
+				<div class="light-small" id="小绿灯"></div>
+				<div class="light-small" id="小蓝灯"></div>
+			</div>
+		</div>
+	</body>
+</html>
