@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/block.css">
+    <script src="js/block.js"></script>
+    <title>钢琴键2.0</title>
+</head>
+
+<body>
+    <!-- 游戏区域 -->
+    <div class="wrapper">
+        <!-- 分数 -->
+        <div id="score"></div>
+        <!-- 游戏区域 -->
+        <div id="main"></div>
+        <!-- 开始界面 -->
+        <div class="curtain_start" id="curtain_start">
+            <p>钢琴键</p>
+            <span id="start">开始</span>
+        </div>
+        <!-- 重新开始 -->
+        <div class="curtain_end" id="curtain_end" style="display: none">
+            <p>游戏结束!</p>
+            <h4 id="res">得分: 0</h4>
+            <span id="again">重新开始</span>
+        </div>
+    </div>
+	
+	<!--敲击区-->
+	<div id="judgeArea"></div>
+    <div id="area"><p>敲击区</p></div>
+	<!--游戏说明-->
+	<div class="introduction">
+		<p>游戏说明</p>
+		<div id="content">
+			<p>
+			当黑块进入敲击区后，按r,t,y,u对应1，2，3，4号位置即可消除黑块，得分加1；
+			若按到白色区域，或者在黑块完全进入敲击区便按，或者黑块超出敲击区，则游戏
+			失败。(有一个bug就是第一块必须在它完全进入敲击区前点按键，之后正常)
+			</p>
+		</div>
+	</div>
+<script>
+    const curtain_start = document.getElementById('curtain_start');
+    const main = document.getElementById('main');
+	const judgeArea = document.getElementById('judgeArea');
+    const start = document.getElementById('start');
+    const again = document.getElementById('again');
+	const area = document.getElementById('area');
+	
+    var gamer = new Block(main);      //创建游戏实例
+	gamer.keyEvent();     //点击监听
+	judgeArea.style.display = 'none';
+	area.style.display = 'none';
+	window.onload = function(){
+		start.onclick = function() {
+        console.log('点击了开始');
+        curtain_start.style.display = 'none';
+		judgeArea.style.display = '';
+		area.style.display = '';
+        // 游戏开始
+        gamer.start();
+    }
+    again.onclick = function() {
+        console.log('点击了重玩');
+        curtain_end.style.display = 'none';
+        // 游戏开始
+        gamer.again();
+    }
+	}
+    
+
+</script>
+</body>
+</html>
